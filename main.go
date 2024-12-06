@@ -62,7 +62,7 @@ func wsPriv() {
 		log.Println(err)
 		return
 	}
-	defer r.Stop()
+	//defer r.Stop()
 	var res bool
 
 	res, _, err = r.Login(apikey, secretKey, passphrase)
