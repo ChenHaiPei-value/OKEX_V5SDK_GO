@@ -101,9 +101,9 @@ func wsJrpc() {
 
 	res, _, err = r.Login(apikey, secretKey, passphrase)
 	if res {
-		fmt.Println("登录成功！")
+		fmt.Println("websocket交易登录成功！")
 	} else {
-		fmt.Println("登录失败！", err)
+		fmt.Println("websocket交易登录失败！", err)
 		return
 	}
 
