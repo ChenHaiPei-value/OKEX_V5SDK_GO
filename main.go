@@ -41,12 +41,12 @@ func REST() {
 
 // 订阅私有频道
 func wsPriv() {
-	ep := "wss://ws.okex.com:8443/ws/v5/private?brokerId=9999"
+	ep := "wss://wspap.okx.com:8443/ws/v5/private"
 
 	// 填写您自己的APIKey信息
-	apikey := "xxxx"
-	secretKey := "xxxxx"
-	passphrase := "xxxxx"
+	apikey := "de6607bf-f39e-4781-83e3-b9b338319ae3"
+	secretKey := "2A13AF232E1AE4F4C105AA25B3645C01"
+	passphrase := "@Zxjchp1314520"
 
 	// 创建ws客户端
 	r, err := NewWsClient(ep)
@@ -102,7 +102,8 @@ func wsPriv() {
 
 // 订阅公共频道
 func wsPub() {
-	ep := "wss://ws.okex.com:8443/ws/v5/public?brokerId=9999"
+	
+	ep := "wss://wspap.okx.com:8443/ws/v5/public"
 
 	// 创建ws客户端
 	r, err := NewWsClient(ep)
@@ -149,12 +150,13 @@ func wsPub() {
 
 // websocket交易
 func wsJrpc() {
-	ep := "wss://ws.okex.com:8443/ws/v5/private?brokerId=9999"
+	ep := "wss://wspap.okx.com:8443/ws/v5/private"
 
 	// 填写您自己的APIKey信息
-	apikey := "xxxx"
-	secretKey := "xxxxx"
-	passphrase := "xxxxx"
+	// 填写您自己的APIKey信息
+	apikey := "de6607bf-f39e-4781-83e3-b9b338319ae3"
+	secretKey := "2A13AF232E1AE4F4C105AA25B3645C01"
+	passphrase := "@Zxjchp1314520"
 
 	var res bool
 	var req_id string
@@ -214,5 +216,5 @@ func main() {
 	wsJrpc()
 
 	// rest请求
-	REST()
+	//REST()
 }
