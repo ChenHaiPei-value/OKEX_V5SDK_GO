@@ -4,9 +4,10 @@ import (
 	"fmt"
 	"log"
 	"time"
-	"os"
 	"sync"
 	. "okex_v5sdk_go/ws"
+	. "okex_v5sdk_go/ws/wlmpl"
+	. "okex_v5sdk_go/config"
 )
 
 
@@ -241,6 +242,7 @@ func updateWsClients(newConfig *jsonConfig) {
 // 监控配置文件的变化
 func watchConfigChanges(filePath string, onChange func(*jsonConfig)) {
     // ... 实现文件监控逻辑
+	updateWsClients(newConfig)
 }
 
 func main() {
@@ -260,9 +262,7 @@ func main() {
 	 // 监控信号账户的更新
 	 monitorSignalAccounts()
 
-    // 监控配置文件的变化，并在变化时更新WebSocket实例
-    watchConfigChanges("config.json", func(newConfig *jsonConfig) {
-        updateWsClients(newConfig)
+
     })
 
     // 阻塞主goroutine，防止程序退出
