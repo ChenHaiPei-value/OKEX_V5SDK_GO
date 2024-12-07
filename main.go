@@ -58,7 +58,7 @@ func placeOrderInFollowAccount(orderData interface{}) {
 }
 
 // 登录和订阅多个信号账户
-func con_login_sub_s(config *ws.jsonConfig) {
+func con_login_sub_s(config *jsonConfig) {
 	for _, account := range config.FollowAccounts {
 		if r, err := NewWsClient(config.EndPoint); err == nil {
 			signalClients[account.APIKey] = r
@@ -129,7 +129,7 @@ func con_login_sub_s(config *ws.jsonConfig) {
 	}
 }
 // 跟单登录和订阅
-func con_login_sub_f(config *ws.jsonConfig) {
+func con_login_sub_f(config *jsonConfig) {
 	if r, err := NewWsClient(config.EndPoint); err == nil {
 		followClient = r
 		// 启动客户端并订阅必要的频道
@@ -197,14 +197,14 @@ func con_login_sub_f(config *ws.jsonConfig) {
 }
 
 // 根据配置加载WebSocket实例
-func loadWsClients(config *ws.jsonConfig) error {
+func loadWsClients(config *jsonConfig) error {
     con_login_sub_s(config)
 	con_login_sub_f(config)
     return nil
 }
 
 // 根据配置更新WebSocket实例
-func updateWsClients(newConfig *ws.jsonConfig) {
+func updateWsClients(newConfig *jsonConfig) {
     // 遍历新的配置，添加新的实例或更新现有实例
     for _, newAccount := range newConfig.FollowAccounts {
         if client, exists := signalClients[newAccount.APIKey]; exists {
@@ -239,14 +239,14 @@ func updateWsClients(newConfig *ws.jsonConfig) {
 }
 
 // 监控配置文件的变化
-func watchConfigChanges(filePath string, onChange func(*ws.jsonConfig)) {
+func watchConfigChanges(filePath string, onChange func(*jsonConfig)) {
     // ... 实现文件监控逻辑
 }
 
 func main() {
 
 	// 加载配置
-	var config ws.jsonConfig
+	var config jsonConfig
 	config, err := LoadConfig("config.json")
 	if err != nil {
 		log.Println("Error loading config:", err)
@@ -261,7 +261,7 @@ func main() {
 	 monitorSignalAccounts()
 
     // 监控配置文件的变化，并在变化时更新WebSocket实例
-    watchConfigChanges("config.json", func(newConfig *ws.jsonConfig) {
+    watchConfigChanges("config.json", func(newConfig *jsonConfig) {
         updateWsClients(newConfig)
     })
 
