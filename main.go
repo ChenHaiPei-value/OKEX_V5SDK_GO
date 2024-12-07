@@ -68,14 +68,14 @@ func wsJrpc() {
 }
 
 var (
-    signalClients = make(map[string]*ws.WsClient)
-    followClient  *ws.WsClient
+    signalClients = make(map[string]*WsClient)
+    followClient  *WsClient
     mutex         sync.Mutex
 )
 
 func monitorSignalAccounts() {
     for apiKey, client := range signalClients {
-        go func(apiKey string, client *ws.WsClient) {
+        go func(apiKey string, client *WsClient) {
             for msg := range client.Messages() {
                 switch msg.Type {
                 case "orders":
@@ -115,76 +115,75 @@ func placeOrderInFollowAccount(orderData interface{}) {
 }
 
 // 登录和订阅多个信号账户
-func con_login_sub_s(account *Account) {
-	if r, err := NewWsClient(config.EndPoint); err == nil {
-		signalClients[account.APIKey] = r
-		// 启动客户端并订阅必要的频道
-		// 设置连接超时
-		r.SetDailTimeout(time.Second * 2)
-		err = r.Start()
-		if err != nil {
+func con_login_sub_s(config *jsonConfig) {
+	for _, account := range config.Accounts {
+		if r, err := NewWsClient(config.EndPoint); err == nil {
+			signalClients[account.APIKey] = r
+			// 启动客户端并订阅必要的频道
+			// 设置连接超时
+			r.SetDailTimeout(time.Second * 2)
+			err = r.Start()
+			if err != nil {
+				log.Println(err)
+				return
+			}
+			defer r.Stop()
+			var res bool
+			var err error
+
+			res, _, err = r.Login(account.APIKey, account.SecretKey, account.Passphrase)
+			if res {
+				fmt.Println("登录成功！")
+			} else {
+				fmt.Println("登录失败！", err)
+				return
+			}
+			// 添加自定义消息钩子
+			/* 
+			r.AddBookMsgHook(func(ts time.Time, data MsgData) error {
+				// 添加你的方法
+				fmt.Println("这是自定义AddBookMsgHook")
+				fmt.Println("当前数据是", data)
+				return nil
+			})*/
+
+			var args []map[string]string
+			arg := make(map[string]string)
+			arg["channel"] = "orders"
+			arg["instType"] = "SWAP"
+			args = append(args, arg)
+
+			start := time.Now()
+			res, _, err = r.PrivBookOrder(OP_SUBSCRIBE, args)
+			if res {
+				usedTime := time.Since(start)
+				fmt.Println("订阅订单频道成功！耗时:", usedTime.String())
+			} else {
+				fmt.Println("订阅订单频道失败！", err)
+			}
+
+			// 订阅账户余额和持仓频道
+			var argsa []map[string]string
+			arga := make(map[string]string)
+			arga["channel"] = "balance_and_position"
+			argsa = append(argsa, arga)
+
+			start := time.Now()
+			res, _, err = r.PrivBalAndPos(OP_SUBSCRIBE, argsa)
+			if res {
+				usedTime := time.Since(start)
+				fmt.Println("	订阅账户余额和持仓频道成功！耗时:", usedTime.String())
+			} else {
+				fmt.Println("	订阅账户余额和持仓频道失败！", err)
+			}
+
+
+		} else {
+			// 处理错误
 			log.Println(err)
 			return
 		}
-		defer r.Stop()
-		var res bool
-		var err error
-
-		res, _, err = r.Login(account.APIKey, account.SecretKey, account.Passphrase)
-		if res {
-			fmt.Println("登录成功！")
-		} else {
-			fmt.Println("登录失败！", err)
-			return
-		}
-		// 添加自定义消息钩子
-		/* 
-		r.AddBookMsgHook(func(ts time.Time, data MsgData) error {
-			// 添加你的方法
-			fmt.Println("这是自定义AddBookMsgHook")
-			fmt.Println("当前数据是", data)
-			return nil
-		})*/
-
-		var args []map[string]string
-		arg := make(map[string]string)
-		arg["channel"] = "orders"
-		arg["instType"] = "SWAP"
-		args = append(args, arg)
-
-		start := time.Now()
-		res, _, err = r.PrivBookOrder(OP_SUBSCRIBE, args)
-		if res {
-			usedTime := time.Since(start)
-			fmt.Println("订阅订单频道成功！耗时:", usedTime.String())
-		} else {
-			fmt.Println("订阅订单频道失败！", err)
-		}
-
-		// 订阅账户余额和持仓频道
-		var argsa []map[string]string
-		arga := make(map[string]string)
-		arga["channel"] = "balance_and_position"
-		argsa = append(argsa, arga)
-
-		start := time.Now()
-		res, _, err = r.PrivBalAndPos(OP_SUBSCRIBE, argsa)
-		if res {
-			usedTime := time.Since(start)
-			fmt.Println("	订阅账户余额和持仓频道
-			成功！耗时:", usedTime.String())
-		} else {
-			fmt.Println("	订阅账户余额和持仓频道
-			失败！", err)
-		}
-
-
-	} else {
-		// 处理错误
-		log.Println(err)
-		return
 	}
-
 }
 // 跟单登录和订阅
 func con_login_sub_f(config *jsonConfig) {
@@ -242,11 +241,9 @@ func con_login_sub_f(config *jsonConfig) {
 		res, _, err = r.PrivBalAndPos(OP_SUBSCRIBE, argsa)
 		if res {
 			usedTime := time.Since(start)
-			fmt.Println("跟单订阅账户余额和持仓频道
-			成功！耗时:", usedTime.String())
+			fmt.Println("跟单订阅账户余额和持仓频道成功！耗时:", usedTime.String())
 		} else {
-			fmt.Println("跟单订阅账户余额和持仓频道
-			失败！", err)
+			fmt.Println("跟单订阅账户余额和持仓频道失败！", err)
 		}
 
 
@@ -260,10 +257,7 @@ func con_login_sub_f(config *jsonConfig) {
 
 // 根据配置加载WebSocket实例
 func loadWsClients(config *jsonConfig) error {
-    for _, account := range config.Accounts {
-        con_login_sub_s(account)
-    }
-
+    con_login_sub_s(config)
 	con_login_sub_f(config)
     return nil
 }
