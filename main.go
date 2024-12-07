@@ -59,7 +59,7 @@ func placeOrderInFollowAccount(orderData interface{}) {
 }
 
 // 登录和订阅多个信号账户
-func con_login_sub_s(config *jsonConfig) {
+func con_login_sub_s(config *ws.jsonConfig) {
 	for _, account := range config.FollowAccounts {
 		if r, err := NewWsClient(config.EndPoint); err == nil {
 			signalClients[account.APIKey] = r
@@ -130,7 +130,7 @@ func con_login_sub_s(config *jsonConfig) {
 	}
 }
 // 跟单登录和订阅
-func con_login_sub_f(config *jsonConfig) {
+func con_login_sub_f(config *ws.jsonConfig) {
 	if r, err := NewWsClient(config.EndPoint); err == nil {
 		followClient = r
 		// 启动客户端并订阅必要的频道
@@ -200,56 +200,56 @@ func con_login_sub_f(config *jsonConfig) {
 }
 
 // 根据配置加载WebSocket实例
-func loadWsClients(config *jsonConfig) error {
+func loadWsClients(config *ws.jsonConfig) error {
     con_login_sub_s(config)
 	con_login_sub_f(config)
     return nil
 }
 
 // 根据配置更新WebSocket实例
-func updateWsClients(newConfig *jsonConfig) {
+func updateWsClients(newConfig *ws.jsonConfig) {
     // 遍历新的配置，添加新的实例或更新现有实例
-    for _, newAccount := range newConfig.Accounts {
-        if client, exists := wsClients[newAccount.ID]; exists {
+    for _, newAccount := range newConfig.FollowAccounts {
+        if client, exists := signalClients[newAccount.APIKey]; exists {
             // 更新现有实例的配置（如果需要）
             client.UpdateConfig(newAccount)
         } else {
             // 添加新的实例
             if newClient, err := NewWsClient(newAccount.EndPoint); err == nil {
-                wsClients[newAccount.ID] = newClient
+                signalClients[newAccount.APIKey] = newClient
                 go newClient.Start()
-                newClient.Subscribe("order-book")
-                newClient.Subscribe("balance")
+                //newClient.Subscribe("order-book")
+                //newClient.Subscribe("balance")
                 // ... 订阅其他需要的频道
             }
         }
     }
 
     // 遍历现有实例，删除不再需要的实例
-    for id, client := range wsClients {
+    for APIKey, client := range signalClients {
         found := false
-        for _, account := range newConfig.Accounts {
-            if account.ID == id {
+        for _, account := range newConfig.FollowAccounts {
+            if account.APIKey == APIKey {
                 found = true
                 break
             }
         }
         if !found {
             client.Stop()
-            delete(wsClients, id)
+            delete(signalClients, APIKey)
         }
     }
 }
 
 // 监控配置文件的变化
-func watchConfigChanges(filePath string, onChange func(*jsonConfig)) {
+func watchConfigChanges(filePath string, onChange func(*ws.jsonConfig)) {
     // ... 实现文件监控逻辑
 }
 
 func main() {
 
 	// 加载配置
-	var config jsonConfig
+	var config ws.jsonConfig
 	config, err := LoadConfig("config.json")
 	if err != nil {
 		log.Println("Error loading config:", err)
@@ -264,7 +264,7 @@ func main() {
 	 monitorSignalAccounts()
 
     // 监控配置文件的变化，并在变化时更新WebSocket实例
-    watchConfigChanges("config.json", func(newConfig *jsonConfig) {
+    watchConfigChanges("config.json", func(newConfig *ws.jsonConfig) {
         updateWsClients(newConfig)
     })
 
