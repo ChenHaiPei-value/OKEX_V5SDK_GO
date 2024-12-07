@@ -326,7 +326,7 @@ func main() {
 	 monitorSignalAccounts()
 
     // 监控配置文件的变化，并在变化时更新WebSocket实例
-    watchConfigChanges("config.json", func(newConfig *Config) {
+    watchConfigChanges("config.json", func(newConfig *jsonConfig) {
         updateWsClients(newConfig)
     })
 

@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"os"
 )
 
 // 定义与JSON结构相对应的Go结构体
@@ -35,8 +34,8 @@ type TelegramConfig struct {
 }
 
 // 读取和解析JSON文件的函数
-func LoadConfig(filename string) (Config, error) {
-	var config Config
+func LoadConfig(filename string) (jsonConfig, error) {
+	var config jsonConfig
 	data, err := ioutil.ReadFile(filename)
 	if err != nil {
 		return config, err
@@ -46,7 +45,7 @@ func LoadConfig(filename string) (Config, error) {
 }
 
 // 保存配置到JSON文件的函数
-func SaveConfig(filename string, config Config) error {
+func SaveConfig(filename string, config jsonConfig) error {
 	data, err := json.MarshalIndent(config, "", "  ")
 	if err != nil {
 		return err
@@ -55,12 +54,12 @@ func SaveConfig(filename string, config Config) error {
 }
 
 // 添加新的followAccount的函数
-func AddFollowAccount(config *Config, account FollowAccount) {
+func AddFollowAccount(config *jsonConfig, account FollowAccount) {
 	config.FollowAccounts = append(config.FollowAccounts, account)
 }
 
 // 删除指定apiKey的followAccount的函数
-func RemoveFollowAccount(config *Config, apiKey string) {
+func RemoveFollowAccount(config *jsonConfig, apiKey string) {
 	for i, account := range config.FollowAccounts {
 		if account.APIKey == apiKey {
 			config.FollowAccounts = append(config.FollowAccounts[:i], config.FollowAccounts[i+1:]...)
@@ -70,7 +69,7 @@ func RemoveFollowAccount(config *Config, apiKey string) {
 }
 
 // 示例：更新WebSocket实例的逻辑（伪代码，具体实现依赖于WebSocket库）
-func UpdateWebSocketInstances(config Config) {
+func UpdateWebSocketInstances(config jsonConfig) {
 	// 遍历所有followAccounts并更新其WebSocket实例
 	for _, account := range config.FollowAccounts {
 		// 假设CreateWebSocketInstance是一个创建并返回WebSocket实例的函数
@@ -78,7 +77,7 @@ func UpdateWebSocketInstances(config Config) {
 		// 这里可以添加逻辑来管理这些WebSocket实例，例如保存在一个map中
 	}
 }
-
+/*  
 func main() {
 	// 加载配置
 	config, err := LoadConfig("config.json")
@@ -109,3 +108,4 @@ func main() {
 	// 更新WebSocket实例
 	UpdateWebSocketInstances(config)
 }
+*/
