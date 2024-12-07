@@ -6,8 +6,7 @@ import (
 	"time"
 	"os"
 	"sync"
-	. "v5sdk_go/ws"
-	. "v5sdk_go/ws/wImpl"
+	. "okex_v5sdk_go/ws"
 )
 
 
@@ -112,11 +111,11 @@ func con_login_sub_s(config *ws.jsonConfig) {
 			arga["channel"] = "balance_and_position"
 			argsa = append(argsa, arga)
 
-			start := time.Now()
+			
 			res, _, err = r.PrivBalAndPos(OP_SUBSCRIBE, argsa)
 			if res {
-				usedTime := time.Since(start)
-				fmt.Println("	订阅账户余额和持仓频道成功！耗时:", usedTime.String())
+				
+				fmt.Println("	订阅账户余额和持仓频道成功！耗时:")
 			} else {
 				fmt.Println("	订阅账户余额和持仓频道失败！", err)
 			}
@@ -181,11 +180,9 @@ func con_login_sub_f(config *ws.jsonConfig) {
 		arga["channel"] = "balance_and_position"
 		argsa = append(argsa, arga)
 
-		start := time.Now()
 		res, _, err = r.PrivBalAndPos(OP_SUBSCRIBE, argsa)
 		if res {
-			usedTime := time.Since(start)
-			fmt.Println("跟单订阅账户余额和持仓频道成功！耗时:", usedTime.String())
+			fmt.Println("跟单订阅账户余额和持仓频道成功！耗时:")
 		} else {
 			fmt.Println("跟单订阅账户余额和持仓频道失败！", err)
 		}
@@ -212,7 +209,7 @@ func updateWsClients(newConfig *ws.jsonConfig) {
     for _, newAccount := range newConfig.FollowAccounts {
         if client, exists := signalClients[newAccount.APIKey]; exists {
             // 更新现有实例的配置（如果需要）
-            client.UpdateConfig(newAccount)
+            //client.UpdateConfig(newAccount)
         } else {
             // 添加新的实例
             if newClient, err := NewWsClient(newAccount.EndPoint); err == nil {

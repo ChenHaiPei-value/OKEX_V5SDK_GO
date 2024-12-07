@@ -5,7 +5,7 @@ import (
 	"log"
 	"testing"
 	"time"
-	. "v5sdk_go/ws/wImpl"
+	. "okex_v5sdk_go/ws/wImpl"
 
 	"github.com/stretchr/testify/assert"
 )

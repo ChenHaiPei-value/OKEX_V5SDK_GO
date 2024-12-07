@@ -4,7 +4,7 @@ import (
 	"context"
 	"log"
 	"time"
-	. "v5sdk_go/ws/wImpl"
+	. "okex_v5sdk_go/ws/wImpl"
 )
 
 /*
