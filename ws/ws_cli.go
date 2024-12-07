@@ -33,7 +33,8 @@ type WsClient struct {
 	conn       *websocket.Conn
 	sendCh     chan string //发消息队列
 	resCh      chan *Msg   //收消息队列
-
+    // 新增的字段：用于发送消息的通道
+    Messages chan *Msg
 	errCh chan *Msg
 	regCh map[Event]chan *Msg //请求响应队列
 
@@ -62,6 +63,7 @@ type WsClient struct {
 type Msg struct {
 	Timestamp time.Time   `json:"timestamp"`
 	Info      interface{} `json:"info"`
+	Type      string      `json:"type"` // 新增的字段：消息类型
 }
 
 func (this *Msg) Print() {
@@ -98,6 +100,8 @@ func NewWsClient(ep string) (r *WsClient, err error) {
 		WsEndPoint: ep,
 		sendCh:     make(chan string),
 		resCh:      make(chan *Msg),
+        // 初始化 Messages 通道
+        Messages: make(chan *Msg, 100), // 假设缓冲区大小为100
 		errCh:      make(chan *Msg),
 		regCh:      make(map[Event]chan *Msg),
 		//cbs:        make(map[Event]ReceivedDataCallback),
@@ -331,7 +335,7 @@ func (a *WsClient) receive() {
 
 			break
 		}
-
+		
 		txtMsg := message
 		switch messageType {
 		case websocket.TextMessage:
@@ -357,8 +361,18 @@ func (a *WsClient) receive() {
 			log.Println("解析消息失败！", err)
 			continue
 		}
+		// 创建一个新的 Msg 实例，并设置 Type 字段（这里假设根据 evt 设置）
+		msgType := determineMessageType(evt) // 这是一个假设的函数，你需要根据实际需求实现它
+		msg := &Msg{
+			Timestamp: timestamp,
+			Info:      data,
+			Type:      msgType, // 设置消息类型
+		}
 
+		// 发送消息到 Messages 通道
+		a.Messages <- msg
 		//log.Println("解析消息成功!消息类型 =", evt)
+
 
 		a.lock.RLock()
 		ch, ok := a.regCh[evt]
@@ -440,6 +454,18 @@ func (a *WsClient) receive() {
 		}
 		cancel()
 	}
+}
+
+func determineMessageType(evt Event) string {
+    switch evt {
+    case EVENT_BOOK_B_AND_P:
+        return "balance_and_position" // 假设这是账户余额和持仓更新的类型
+    case EVENT_BOOK_ORDER:
+        return "orders" // 假设这是订单更新的类型
+    // ... 为其他事件类型添加 case ...
+    default:
+        return "unknown"
+    }
 }
 
 /*

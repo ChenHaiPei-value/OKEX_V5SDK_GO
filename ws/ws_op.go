@@ -7,7 +7,6 @@ import (
 	"sync"
 	"time"
 	. "v5sdk_go/config"
-	"v5sdk_go/rest"
 	. "v5sdk_go/utils"
 	. "v5sdk_go/ws/wImpl"
 	. "v5sdk_go/ws/wInterface"
@@ -87,7 +86,7 @@ func (a *WsClient) Login(apiKey, secKey, passPhrase string, timeOut ...int) (res
 
 	timestamp := EpochTime()
 
-	preHash := PreHashString(timestamp, rest.GET, "/users/self/verify", "")
+	preHash := PreHashString(timestamp, "GET", "/users/self/verify", "")
 	//fmt.Println("preHash:", preHash)
 	var sign string
 	if sign, err = HmacSha256Base64Signer(preHash, secKey); err != nil {

@@ -1,0 +1,30 @@
+{
+  "apiKey": "de6607bf-f39e-4781-83e3-b9b338319ae3",
+  "secretKey": "2A13AF232E1AE4F4C105AA25B3645C01",
+  "passphrase": "@Zxjchp1314520",
+  "EndPoint": "wss://wspap.okx.com:8443/ws/v5/private",
+  "delay_time": 60,
+  "whait_time": 1,
+  "whait_times": 2,  
+  "followAccounts": [
+    {
+      "apiKey": "909cf8b1-265c-419c-8a70-9a71c80eca90",
+      "secretKey": "4DD15BA725CE581694EE5EBEF6A4F309",
+      "passphrase": "@Zxjchp1314520",
+      "followRatio":10
+    },
+    {
+      "apiKey": "909cf8b1-265c-419c-8a70-9a71c80eca90",
+      "secretKey": "4DD15BA725CE581694EE5EBEF6A4F309",
+      "passphrase": "@Zxjchp1314520",
+      "followRatio":5
+    }
+  ],
+  "telegram": {
+    "chatID_Info": "",
+    "token_Info": "",
+
+    "chatID_Error": "",
+    "token_Error": ""
+  }
+}
