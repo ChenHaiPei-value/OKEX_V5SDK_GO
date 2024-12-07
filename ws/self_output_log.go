@@ -2,7 +2,6 @@ package ws
 
 import (
 	"log"
-	"os"
 )
 
 // CreateLogger 创建一个新的log.Logger实例，并将输出重定向到指定的文件中
@@ -32,4 +31,5 @@ func CreateLogger(logFileName string) (*log.Logger, error) {
 	logger.Printf("这是一条带有格式化的日志消息: %d", 42)
 
 	// ... 你的其他代码 ...
-}/*  
+}
+ */

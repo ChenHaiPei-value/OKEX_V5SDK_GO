@@ -8,7 +8,7 @@ import (
 )
 
 // 定义与JSON结构相对应的Go结构体
-type Config struct {
+type jsonConfig struct {
 	APIKey       string `json:"apiKey"`
 	SecretKey    string `json:"secretKey"`
 	Passphrase   string `json:"passphrase"`

@@ -311,7 +311,7 @@ func watchConfigChanges(filePath string, onChange func(*Config)) {
 func main() {
 
 	// 加载配置
-	var config Config
+	var config jsonConfig
 	config, err := LoadConfig("config.json")
 	if err != nil {
 		log.Println("Error loading config:", err)
