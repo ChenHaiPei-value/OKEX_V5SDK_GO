@@ -59,7 +59,7 @@ func placeOrderInFollowAccount(orderData interface{}) {
 }
 
 // 登录和订阅多个信号账户
-func con_login_sub_s(config *mjsonConfig) {
+func con_login_sub_s(config *MjsonConfig) {
 	for _, account := range config.FollowAccounts {
 		if r, err := NewWsClient(config.MEndPoint); err == nil {
 			signalClients[account.APIKey] = r
@@ -130,7 +130,7 @@ func con_login_sub_s(config *mjsonConfig) {
 	}
 }
 // 跟单登录和订阅
-func con_login_sub_f(config *mjsonConfig) {
+func con_login_sub_f(config *MjsonConfig) {
 	if r, err := NewWsClient(config.MEndPoint); err == nil {
 		followClient = r
 		// 启动客户端并订阅必要的频道
@@ -198,7 +198,7 @@ func con_login_sub_f(config *mjsonConfig) {
 }
 
 // 根据配置加载WebSocket实例
-func loadWsClients(config *mjsonConfig) error {
+func loadWsClients(config *MjsonConfig) error {
     con_login_sub_s(config)
 	con_login_sub_f(config)
     return nil
@@ -250,7 +250,7 @@ func watchConfigChanges(filePath string, onChange func(*jsonConfig)) {
 func main() {
 
 	// 加载配置
-	var config mjsonConfig
+	var config MjsonConfig
 	config, err := LoadConfig("config.json")
 	if err != nil {
 		log.Println("Error loading config:", err)
