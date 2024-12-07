@@ -108,15 +108,15 @@ func placeOrderInFollowAccount(orderData interface{}) {
     }
     _, _, err := followClient.PlaceOrder("00001", param)
     if err != nil {
-        log.Errorf("Failed to place order in follow account: %v", err)
+        fmt.Println("Failed to place order in follow account: %v", err)
     } else {
-        log.Info("Order placed successfully in follow account")
+        fmt.Println("Order placed successfully in follow account")
     }
 }
 
 // 登录和订阅多个信号账户
 func con_login_sub_s(config *jsonConfig) {
-	for _, account := range config.Accounts {
+	for _, account := range config.FollowAccounts {
 		if r, err := NewWsClient(config.EndPoint); err == nil {
 			signalClients[account.APIKey] = r
 			// 启动客户端并订阅必要的频道
