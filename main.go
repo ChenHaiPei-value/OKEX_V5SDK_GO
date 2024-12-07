@@ -6,7 +6,7 @@ import (
 	"time"
 	"sync"
 	. "okex_v5sdk_go/ws"
-	. "okex_v5sdk_go/ws/wlmpl"
+	. "okex_v5sdk_go/ws/wImpl"
 	. "okex_v5sdk_go/config"
 )
 
