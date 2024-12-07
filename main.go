@@ -7,6 +7,7 @@ import (
 	"os"
 	"sync"
 	. "v5sdk_go/ws"
+	. "v5sdk_go/ws/wImpl"
 )
 
 
@@ -24,7 +25,7 @@ func monitorSignalAccounts() {
                 case "orders":
                     handleOrder(apiKey, msg.Info)
                 case "balance_and_position_update":
-                    handleBalanceAndPositionUpdate(apiKey, msg.Data)
+                    handleBalanceAndPositionUpdate(apiKey, msg.Info)
                 // 处理其他类型的更新
                 }
             }
