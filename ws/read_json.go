@@ -2,7 +2,7 @@ package ws
 
 import (
 	"encoding/json"
-	"fmt"
+
 	"io/ioutil"
 )
 
@@ -67,7 +67,7 @@ func RemoveFollowAccount(config *jsonConfig, apiKey string) {
 		}
 	}
 }
-
+/* 
 // 示例：更新WebSocket实例的逻辑（伪代码，具体实现依赖于WebSocket库）
 func UpdateWebSocketInstances(config jsonConfig) {
 	// 遍历所有followAccounts并更新其WebSocket实例
@@ -77,6 +77,7 @@ func UpdateWebSocketInstances(config jsonConfig) {
 		// 这里可以添加逻辑来管理这些WebSocket实例，例如保存在一个map中
 	}
 }
+*/
 /*  
 func main() {
 	// 加载配置

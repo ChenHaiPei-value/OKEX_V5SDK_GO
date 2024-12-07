@@ -187,7 +187,7 @@ func con_login_sub_s(account *Account) {
 
 }
 // 跟单登录和订阅
-func con_login_sub_f(config *Config) {
+func con_login_sub_f(config *jsonConfig) {
 	if r, err := NewWsClient(config.EndPoint); err == nil {
 		followClient = r
 		// 启动客户端并订阅必要的频道
@@ -259,7 +259,7 @@ func con_login_sub_f(config *Config) {
 }
 
 // 根据配置加载WebSocket实例
-func loadWsClients(config *Config) error {
+func loadWsClients(config *jsonConfig) error {
     for _, account := range config.Accounts {
         con_login_sub_s(account)
     }
@@ -269,7 +269,7 @@ func loadWsClients(config *Config) error {
 }
 
 // 根据配置更新WebSocket实例
-func updateWsClients(newConfig *Config) {
+func updateWsClients(newConfig *jsonConfig) {
     // 遍历新的配置，添加新的实例或更新现有实例
     for _, newAccount := range newConfig.Accounts {
         if client, exists := wsClients[newAccount.ID]; exists {
@@ -304,7 +304,7 @@ func updateWsClients(newConfig *Config) {
 }
 
 // 监控配置文件的变化
-func watchConfigChanges(filePath string, onChange func(*Config)) {
+func watchConfigChanges(filePath string, onChange func(*jsonConfig)) {
     // ... 实现文件监控逻辑
 }
 

@@ -363,14 +363,14 @@ func (a *WsClient) receive() {
 		}
 		// 创建一个新的 Msg 实例，并设置 Type 字段（这里假设根据 evt 设置）
 		msgType := determineMessageType(evt) // 这是一个假设的函数，你需要根据实际需求实现它
-		msg := &Msg{
+		mmsg := &Msg{
 			Timestamp: timestamp,
 			Info:      data,
 			Type:      msgType, // 设置消息类型
 		}
 
 		// 发送消息到 Messages 通道
-		a.Messages <- msg
+		a.Messages <- mmsg
 		//log.Println("解析消息成功!消息类型 =", evt)
 
 

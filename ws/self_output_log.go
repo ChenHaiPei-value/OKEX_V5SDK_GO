@@ -2,6 +2,7 @@ package ws
 
 import (
 	"log"
+	"os"
 )
 
 // CreateLogger 创建一个新的log.Logger实例，并将输出重定向到指定的文件中
