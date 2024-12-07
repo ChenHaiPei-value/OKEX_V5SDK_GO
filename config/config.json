@@ -2,7 +2,7 @@
   "apiKey": "de6607bf-f39e-4781-83e3-b9b338319ae3",
   "secretKey": "2A13AF232E1AE4F4C105AA25B3645C01",
   "passphrase": "@Zxjchp1314520",
-  "EndPoint": "wss://wspap.okx.com:8443/ws/v5/private",
+  "mEndPoint": "wss://wspap.okx.com:8443/ws/v5/private",
   "delay_time": 60,
   "whait_time": 1,
   "whait_times": 2,  

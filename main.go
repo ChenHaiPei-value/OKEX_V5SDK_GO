@@ -7,7 +7,6 @@ import (
 	"sync"
 	. "okex_v5sdk_go/ws"
 	. "okex_v5sdk_go/ws/wImpl"
-	. "okex_v5sdk_go/config"
 )
 
 
@@ -59,9 +58,9 @@ func placeOrderInFollowAccount(orderData interface{}) {
 }
 
 // 登录和订阅多个信号账户
-func con_login_sub_s(config *jsonConfig) {
+func con_login_sub_s(config *mjsonConfig) {
 	for _, account := range config.FollowAccounts {
-		if r, err := NewWsClient(config.EndPoint); err == nil {
+		if r, err := NewWsClient(config.MEndPoint); err == nil {
 			signalClients[account.APIKey] = r
 			// 启动客户端并订阅必要的频道
 			// 设置连接超时
@@ -130,8 +129,8 @@ func con_login_sub_s(config *jsonConfig) {
 	}
 }
 // 跟单登录和订阅
-func con_login_sub_f(config *jsonConfig) {
-	if r, err := NewWsClient(config.EndPoint); err == nil {
+func con_login_sub_f(config *mjsonConfig) {
+	if r, err := NewWsClient(config.MEndPoint); err == nil {
 		followClient = r
 		// 启动客户端并订阅必要的频道
 		// 设置连接超时
@@ -198,13 +197,14 @@ func con_login_sub_f(config *jsonConfig) {
 }
 
 // 根据配置加载WebSocket实例
-func loadWsClients(config *jsonConfig) error {
+func loadWsClients(config *mjsonConfig) error {
     con_login_sub_s(config)
 	con_login_sub_f(config)
     return nil
 }
 
 // 根据配置更新WebSocket实例
+/* 
 func updateWsClients(newConfig *jsonConfig) {
     // 遍历新的配置，添加新的实例或更新现有实例
     for _, newAccount := range newConfig.FollowAccounts {
@@ -244,11 +244,12 @@ func watchConfigChanges(filePath string, onChange func(*jsonConfig)) {
     // ... 实现文件监控逻辑
 	updateWsClients(newConfig)
 }
+*/
 
 func main() {
 
 	// 加载配置
-	var config jsonConfig
+	var config mjsonConfig
 	config, err := LoadConfig("config.json")
 	if err != nil {
 		log.Println("Error loading config:", err)
@@ -262,8 +263,6 @@ func main() {
 	 // 监控信号账户的更新
 	 monitorSignalAccounts()
 
-
-    })
 
     // 阻塞主goroutine，防止程序退出
     select {}

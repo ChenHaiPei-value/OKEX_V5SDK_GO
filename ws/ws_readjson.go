@@ -1,4 +1,4 @@
-package config
+package ws
 
 import (
 	"encoding/json"
@@ -7,11 +7,11 @@ import (
 )
 
 // 定义与JSON结构相对应的Go结构体
-type jsonConfig struct {
+type mjsonConfig struct {
 	APIKey       string `json:"apiKey"`
 	SecretKey    string `json:"secretKey"`
 	Passphrase   string `json:"passphrase"`
-	EndPoint   string `json:"EndPoint"`
+	MEndPoint   string `json:"mEndPoint"`
 	DelayTime    int    `json:"delay_time"`
 	WaitTime     int    `json:"whait_time"`
 	WaitTimes    int    `json:"whait_times"`
@@ -34,8 +34,8 @@ type TelegramConfig struct {
 }
 
 // 读取和解析JSON文件的函数
-func LoadConfig(filename string) (jsonConfig, error) {
-	var config jsonConfig
+func LoadConfig(filename string) (mjsonConfig, error) {
+	var config mjsonConfig
 	data, err := ioutil.ReadFile(filename)
 	if err != nil {
 		return config, err
@@ -45,7 +45,7 @@ func LoadConfig(filename string) (jsonConfig, error) {
 }
 
 // 保存配置到JSON文件的函数
-func SaveConfig(filename string, config jsonConfig) error {
+func SaveConfig(filename string, config mjsonConfig) error {
 	data, err := json.MarshalIndent(config, "", "  ")
 	if err != nil {
 		return err
@@ -54,12 +54,12 @@ func SaveConfig(filename string, config jsonConfig) error {
 }
 
 // 添加新的followAccount的函数
-func AddFollowAccount(config *jsonConfig, account FollowAccount) {
+func AddFollowAccount(config *mjsonConfig, account FollowAccount) {
 	config.FollowAccounts = append(config.FollowAccounts, account)
 }
 
 // 删除指定apiKey的followAccount的函数
-func RemoveFollowAccount(config *jsonConfig, apiKey string) {
+func RemoveFollowAccount(config *mjsonConfig, apiKey string) {
 	for i, account := range config.FollowAccounts {
 		if account.APIKey == apiKey {
 			config.FollowAccounts = append(config.FollowAccounts[:i], config.FollowAccounts[i+1:]...)
