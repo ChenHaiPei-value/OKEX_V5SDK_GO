@@ -358,7 +358,7 @@ func main() {
 
 	// 加载配置
 	var config MjsonConfig
-	config, err := LoadConfig("config.json")
+	config, err := LoadConfig("ws/config.json")
 	if err != nil {
 		log.Println("Error loading config:", err)
 		return
